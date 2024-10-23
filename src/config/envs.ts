@@ -3,27 +3,22 @@ import * as joi from 'joi';
 
 interface EnvVars {
   PORT: number;
-  //DATABASE_URL: string;
-  HOST_PRODUCT_MS: string;
-  PORT_PRODUCT_MS: number;
 
-  HOST_ORDER_MS: string;
-  PORT_ORDER_MS: number;
+  NATS_SERVERS: string;
 }
 
 const envSchema = joi
   .object({
     PORT: joi.number().required(),
-    //DATABASE_URL: joi.string().required(),
-    HOST_PRODUCT_MS: joi.string().required(),
-    PORT_PRODUCT_MS: joi.number().required(),
 
-    HOST_ORDER_MS: joi.string().required(),
-    PORT_ORDER_MS: joi.number().required(),
+    NATS_SERVERS: joi.array().items(joi.string()).required(),
   })
   .unknown(true);
 
-const { error, value } = envSchema.validate(process.env);
+const { error, value } = envSchema.validate({
+  ...process.env,
+  NATS_SERVERS: process.env.NATS_SERVERS?.split(','),
+});
 
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
@@ -33,10 +28,6 @@ const envVars: EnvVars = value;
 
 export const envs = {
   port: envVars.PORT,
-  //databaseUrl: envVars.DATABASE_URL,
-  hostProductMs: envVars.HOST_PRODUCT_MS,
-  portProductMs: envVars.PORT_PRODUCT_MS,
 
-  hostOrderMs: envVars.HOST_ORDER_MS,
-  portOrderMs: envVars.PORT_ORDER_MS,
+  natsServers: envVars.NATS_SERVERS,
 };
