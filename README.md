@@ -1,13 +1,15 @@
-# Product Microservice  
+# Client Gateway   
+El gateway es el punto de comunicación entre nuestros clientes y nuestros servicios. Es el encargado de recibir las peticiones, enviarlas a los servicios correspondientes y devolver la respuesta al cliente.
 ## Dev  
 1. Clonar el repositorio  
 2. Instalar dependencias  
+3. Crear un achivo `.env` con las variables de entorno  
+4. Levantar el servidor de NATS
 ```bash
-npm install
+docker run -d --name nats-server -p 4222:4222 -p 8222:8222 nats
 ```
-3. Crear un achivo `.env` con las variables de entorno 
-4. Correr microservicios 
-5. Ejecutar  
+5. Tener levantados los microservicios que se van a consumir  
+6. Ejecutar  
 ```bash
 npm run start:dev
 ```
